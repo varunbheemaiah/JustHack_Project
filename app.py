@@ -4,6 +4,9 @@ import urllib.request
 from flask import send_file
 import sqlite3
 from flask import g
+import hashlib
+
+salt = "TwinFuries"
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -52,10 +55,11 @@ def index():
     message = ""
     if request.method == 'POST':
         user = request.form['username']
-        pswd = request.form['password']
+        pswdun = request.form['password']+salt
+        pswd = hashlib.md5(pswdun.encode())
         password = query_db('select password from Details where Username="'+user+'"')
         if password:
-            if password[0][0] == pswd:
+            if password[0][0] == pswd.hexdigest():
                 return redirect('/home')
         else:
             message = "Invalid Username or Password"
@@ -67,8 +71,9 @@ def register():
         username = request.form['username']
         college = request.form['college']
         email = request.form['email']
-        password = request.form['pwd1']
-        execute_db('insert into Details values("'+username+'","'+email+'","'+college+'","'+password+'")')
+        passwordun = request.form['pwd1']+salt
+        password = hashlib.md5(passwordun.encode())
+        execute_db('insert into Details values("'+username+'","'+email+'","'+college+'","'+password.hexdigest()+'")')
         return redirect('/home')
     return render_template('register.html')
 

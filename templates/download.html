@@ -2,12 +2,19 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>DOWNLOAD</title>
+    <link rel="stylesheet" type="text/css" href="/static/download.css">
   </head>
   <body>
+    <div id="login-box">
+  <div class="left-box">
     <h1>Download Notes</h1><br>
+    <div id="ssss">
     {% for i in fnames %}
-      <li><a href="download/{{i}}">{{i}}</li>
+      <li><a href="download/{{i}}">{{i}}</a></li>
     {% endfor %}
+  </div>
+  </div>
+</div>
   </body>
 </html>

@@ -6,6 +6,10 @@ from flask import send_file
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+@app.route('/')
+def index():
+    return render_template('home.html')
+
 @app.route('/upload')
 def upload():
    return render_template('upload.html')
@@ -55,6 +59,11 @@ def download_file(fname):
     target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
     destination = "/".join([target,fname])
     return send_file(destination, as_attachment=True)
+
+@app.route('/downloadoptions')
+def downloadoptions():
+    return render_template('downloadoptions.html')
+
 
 if __name__ == '__main__':
    app.run(debug = True)

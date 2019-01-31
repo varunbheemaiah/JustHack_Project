@@ -1,0 +1,86 @@
+body
+{
+    margin: 0;
+    padding: 0;
+    /*background: url(books2.jpeg) no-repeat center fixed;*/
+    font-size: 16px;
+    color: #777;
+    font-family: sans-serif;
+    font-weight: 300;
+}
+
+#login-box
+{
+    position: relative;
+    margin: 5% auto;
+    height: 220px;
+    width: 300px;
+    background: #000000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+    opacity: 0.8;
+    box-shadow: 20px 20px 50px 15px black;
+    opacity: 0.8;
+}
+
+.left-box
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    padding: 40px;
+    width: 300px;
+    height: 400px;    
+}
+
+h1
+{
+    margin: 0 0 20px 0;
+    font-weight: 300;
+    font-size: 28px;
+    text-align: center;
+}
+
+input[type="submit"]
+{
+    margin-bottom: 28px;
+    width: 120px;
+    height: 32px;
+    background: #f44336;
+    border: none;
+    border-radius: 2px;
+    color: #fff;
+    font-family: sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    transition: 0.2s ease;
+    cursor: pointer;
+    text-align: center;
+    margin-left: 45px;
+    margin-right: 25px;
+    margin: absolute;
+    
+}
+
+input[type="submit"]:hover,
+input[type="submit"]:focus
+{
+    background: #ff5722;
+    transition: 0.2s ease;
+}
+
+/*p
+{
+    margin: 0;
+    padding: 0 0 20px;
+    text-align: center;
+    font-size: 15px;
+    color: #fff;
+}*/
+
+
+
+
+
+
+

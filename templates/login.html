@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>LOGIN</title>
+<title>Login | Updown</title>
     <link rel="stylesheet" type="text/css" href="/static/login_css.css">
 <body>
     <div class="loginbox">
     <img src="/static/avatar.png" class="avatar">
         <h1>Login</h1>
-        <form>
+        <form action = "/" method="POST">
             <p>Username</p>
-            <input type="text" name="" placeholder="Enter the Username">
+            <input type="text" name="username" placeholder="Enter the Username">
             <p>Password</p>
-            <input type="password" name="" placeholder="Enter the Password">
+            <input type="password" name="password" placeholder="Enter the Password">
             <input type="submit" name="" value="Login">
+          </form>
+            {{ confirm }}<br>
             <a href="/register"><u>Don't have an account yet?</u></a>
-        </form>
+
 
 
     </div>

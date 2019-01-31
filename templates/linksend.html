@@ -2,14 +2,17 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>Upload Link | Updown</title>
+    <link rel="stylesheet" type="text/css" href="/static/upload_link_css.css">
   </head>
   <body>
+    <div class="uploadbox">
     <h1>Enter The Link</h1><br>
     <form action = "http://localhost:5000/linksend" method = "POST" enctype = "multipart/form-data">
      <input type = "text" name = "link" placeholder = "Enter Link Here" >
      <input type = "submit" value="Submit">
   </form>
   {{ confirm }}
+</div>
   </body>
 </html>

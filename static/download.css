@@ -3,6 +3,7 @@ body
     margin: 0;
     padding: 0;
     /*background: url(books2.jpeg) no-repeat center fixed;*/
+    background-color: #7171F4;
     font-size: 16px;
     color: #777;
     font-family: sans-serif;
@@ -13,7 +14,7 @@ body
 {
     position: relative;
     margin: 5% auto;
-    height: 800px;
+    height: 600px;
     width: 300px;
     background: #000000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
@@ -39,6 +40,7 @@ h1
     font-weight: 300;
     font-size: 28px;
     text-align: center;
+    color: white;
 }
 
 input[type="submit"]
@@ -84,7 +86,7 @@ a:link
 a:hover
 {
   text-decoration: none;
-  color: #FFC107;
+  color: #7171F4;
 }
 
 /*p

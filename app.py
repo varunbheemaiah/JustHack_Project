@@ -14,6 +14,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        #db.row_factory = sqlite3.Row
     return db
 
 @app.teardown_appcontext
@@ -25,6 +26,7 @@ def close_connection(exception):
 def make_dicts(cursor, row):
     return dict((cursor.description[idx][0], value)
                 for idx, value in enumerate(row))
+
 @app.route('/init_db')
 def init_db():
     with app.app_context():
@@ -45,14 +47,23 @@ def execute_db(query):
     cur.commit()
     cur.close()
 
-@app.route('/')
+@app.route('/', methods = ['POST' , 'GET'])
 def index():
-    return render_template('login.html')
+    message = ""
+    if request.method == 'POST':
+        user = request.form['username']
+        pswd = request.form['password']
+        password = query_db('select password from Details where Username="'+user+'"')
+        if password:
+            if password[0][0] == pswd:
+                return redirect('/home')
+        else:
+            message = "Invalid Username or Password"
+    return render_template('login.html', confirm = message)
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        print("inside method")
         username = request.form['username']
         college = request.form['college']
         email = request.form['email']
@@ -83,12 +94,17 @@ def upload_file():
             os.mkdir(target)
         f = request.files['file']
         fname = f.filename
-        destination = "/".join([target,fname])
-        if(os.path.isfile(destination)):
-            message = "We already have those notes"
+        filenamels = fname.split(".")
+        validfiles = ["doc" , "docx" , "pdf", "epub"]
+        if filenamels[1] in validfiles:
+            destination = "/".join([target,fname])
+            if(os.path.isfile(destination)):
+                message = "We already have those notes"
+            else:
+                f.save(destination)
+                message = "File Uploaded Successfully"
         else:
-            f.save(destination)
-            message = "File Uploaded Successfully"
+            message = "Invalid File Format"
     return render_template('upload.html',confirm = message)
 
 @app.route('/link')

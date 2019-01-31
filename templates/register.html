@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> SIGN-UP</title>
+    <link rel="stylesheet" type="text/css" href="/static/signup_css.css">
+</head>
+
+<script type="text/javascript">
+
+  function checkForm(form)
+  {
+    if(form.username.value == "") {
+      alert("Error: Username cannot be blank!");
+      form.username.focus();
+      return false;
+    }
+    re = /^\w+$/;
+    if(!re.test(form.username.value)) {
+      alert("Error: Username must contain only letters, numbers and underscores!");
+      form.username.focus();
+      return false;
+    }
+
+    if(form.pwd1.value != "" && form.pwd1.value == form.pwd2.value) {
+      if(form.pwd1.value.length < 6) {
+        alert("Error: Password must contain at least six characters!");
+        form.pwd1.focus();
+        return false;
+      }
+      if(form.pwd1.value == form.username.value) {
+        alert("Error: Password must be different from Username!");
+        form.pwd1.focus();
+        return false;
+      }
+      re = /[0-9]/;
+      if(!re.test(form.pwd1.value)) {
+        alert("Error: password must contain at least one number (0-9)!");
+        form.pwd1.focus();
+        return false;
+      }
+      re = /[a-z]/;
+      if(!re.test(form.pwd1.value)) {
+        alert("Error: password must contain at least one lowercase letter (a-z)!");
+        form.pwd1.focus();
+        return false;
+      }
+      re = /[A-Z]/;
+      if(!re.test(form.pwd1.value)) {
+        alert("Error: password must contain at least one uppercase letter (A-Z)!");
+        form.pwd1.focus();
+        return false;
+      }
+    } else {
+      alert("Error: Password mismatch!");
+      form.pwd1.focus();
+      return false;
+    }
+
+    alert("You entered a valid password");
+    return true;
+  }
+
+</script>
+
+
+<body>
+
+    <div id="login-box">
+      <div class="left-box">
+        <h1> Sign Up</h1>
+          <form ... onsubmit="return checkForm(this);" action="/register" method="POST">
+          <input type="text" name="username" placeholder="Username">
+          <input type="text" name="email" placeholder="Email"/>
+          <input type="text" name="college" placeholder="College"/>
+          <input type="password" name="pwd1" placeholder="Password">
+          <input type="password" name="pwd2" placeholder="Confirm Password">
+          <input type="submit" name="signup-button" value="Sign Up" onclick="checkpassword()">
+          <a href="/"><p><u>Already have an account?</u></p></a>
+          </form>
+        </div>
+    </div>
+
+</body>
+</html>

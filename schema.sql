@@ -1,0 +1,1 @@
+create table Details(Username varchar(50), Email varchar(50), College varchar(50), Password varchar(20));

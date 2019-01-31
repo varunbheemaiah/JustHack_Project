@@ -1,0 +1,20 @@
+<html>
+<head>
+	<title>UPLOAD</title>
+	<link rel="stylesheet" type="text/css" href="/static/upload2_css.css">
+</head>
+
+<body>
+    <div class="uploadbox">
+        <h1>Upload</h1>
+        <form action = "http://localhost:5000/uploader" method = "POST" enctype = "multipart/form-data">
+         <input type = "file" name = "file" >
+         <input type = "submit" value="Upload">
+      </form>
+			{{ confirm }}
+
+    </div>
+
+</body>
+</head>
+</html>

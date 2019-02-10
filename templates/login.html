@@ -6,6 +6,13 @@
 <body>
     <div class="loginbox">
     <img src="/static/avatar.png" class="avatar">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <center>{{ message }}</center><br>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
         <h1>Login</h1>
         <form action = "/" method="POST">
             <p>Username</p>

@@ -1,16 +1,28 @@
+#Imports
+#------------------------------------------------------------------------------#
+
 import os
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 import urllib.request
 from flask import send_file
 import sqlite3
 from flask import g
 import hashlib
 
-salt = "TwinFuries"
+#------------------------------------------------------------------------------#
 
+#Initial Setups
+#------------------------------------------------------------------------------#
+
+salt = "TwinFuries"
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 app.secret_key = os.urandom(24)
+
+#------------------------------------------------------------------------------#
+
+#Database Setup and functions
+#------------------------------------------------------------------------------#
 
 DATABASE = os.path.join(APP_ROOT,'Database/database.db')
 
@@ -51,6 +63,14 @@ def execute_db(query):
     cur.commit()
     cur.close()
 
+#------------------------------------------------------------------------------#
+
+#Website routes
+#------------------------------------------------------------------------------#
+
+#Login Page(Everyone)
+#------------------------------------------------------------------------------#
+
 @app.route('/', methods = ['POST' , 'GET'])
 def index():
     message = ""
@@ -61,10 +81,16 @@ def index():
         password = query_db('select password from Details where Username="'+user+'"')
         if password:
             if password[0][0] == pswd.hexdigest():
+                session['user'] = user
                 return redirect('/home')
         else:
             message = "Invalid Username or Password"
     return render_template('login.html', confirm = message)
+
+#------------------------------------------------------------------------------#
+
+#Registration Page(Everyone)
+#------------------------------------------------------------------------------#
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
@@ -80,77 +106,115 @@ def register():
             failed = "Email already registered"
         else:
             execute_db('insert into Details values("'+username+'","'+email+'","'+college+'","'+password.hexdigest()+'")')
-            return redirect('/home')
+            return redirect('/')
     return render_template('register.html', message = failed)
+
+#------------------------------------------------------------------------------#
 
 @app.route('/db_add')
 def adddata():
     pass
 
-
+#Home Page(Logged in)
+#------------------------------------------------------------------------------#
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    if 'user' in session:
+        return render_template('home.html')
+    flash("Log in to view this page")
+    return redirect('/')
 
-@app.route('/upload')
-def upload():
-   return render_template('upload.html')
+#------------------------------------------------------------------------------#
 
-@app.route('/uploader', methods = ['GET', 'POST'])
+#Upload file(Logged in)
+#------------------------------------------------------------------------------#
+
+@app.route('/upload', methods = ['GET', 'POST'])
 def upload_file():
-    if request.method == 'POST':
-        target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
-        if not os.path.isdir(target):
-            os.mkdir(target)
-        f = request.files['file']
-        fname = f.filename
-        filenamels = fname.split(".")
-        validfiles = ["doc" , "docx" , "pdf", "epub"]
-        if filenamels[1] in validfiles:
-            destination = "/".join([target,fname])
-            if(os.path.isfile(destination)):
-                message = "We already have those notes"
+    message = ""
+    if 'user' in session:
+        if request.method == 'POST':
+            target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
+            if not os.path.isdir(target):
+                os.mkdir(target)
+            f = request.files['file']
+            fname = f.filename
+            filenamels = fname.split(".")
+            validfiles = ["doc" , "docx" , "pdf", "epub"]
+            if filenamels[1] in validfiles:
+                destination = "/".join([target,fname])
+                if(os.path.isfile(destination)):
+                    message = "We already have those notes"
+                else:
+                    f.save(destination)
+                    message = "File Uploaded Successfully"
             else:
-                f.save(destination)
-                message = "File Uploaded Successfully"
-        else:
-            message = "Invalid File Format"
-    return render_template('upload.html',confirm = message)
+                message = "Invalid File Format"
+        return render_template('upload.html',confirm = message)
+    flash("Log in to view this page")
+    return redirect('/')
 
-@app.route('/link')
-def link():
-    return render_template('linksend.html')
+#------------------------------------------------------------------------------#
 
-@app.route('/linksend', methods = ['GET', 'POST'])
+#Upload link(Logged in)
+#------------------------------------------------------------------------------#
+
+@app.route('/link', methods = ['GET', 'POST'])
 def download_link():
-    if request.method == 'POST':
-        target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
-        url = request.form['link']
-        fname = url[url.rfind("/")+1:]
-        destination = "/".join([target,fname])
-        urllib.request.urlretrieve("http://"+url,destination)
-        message = "File will be added if available"
-    return render_template('linksend.html',confirm = message)
+    if 'user' in session:
+        if request.method == 'POST':
+                target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
+                url = request.form['link']
+                fname = url[url.rfind("/")+1:]
+                destination = "/".join([target,fname])
+                urllib.request.urlretrieve("http://"+url,destination)
+                message = "File will be added if available"
+        return render_template('linksend.html',confirm = message)
+    flash("Log in to view this page")
+    return redirect('/')
+
+#------------------------------------------------------------------------------#
+
+#Download Uploaded_Notes(Logged in)
+#------------------------------------------------------------------------------#
 
 @app.route('/download')
 def download():
-    file_list = []
-    target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
-    for root, dirs, files in os.walk(target):
-        for filename in files:
-            file_list.append(filename)
-    return render_template('download.html', fnames = file_list)
+    if 'user' in session:
+        file_list = []
+        target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
+        for root, dirs, files in os.walk(target):
+            for filename in files:
+                file_list.append(filename)
+        return render_template('download.html', fnames = file_list)
+    flash("Log in to view this page")
+    return redirect('/')
 
 @app.route('/download/<fname>', methods = ['GET' , 'POST'])
 def download_file(fname):
-    target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
-    destination = "/".join([target,fname])
-    return send_file(destination, as_attachment=True)
+    if 'user' in session:
+        target = os.path.join(APP_ROOT, 'Uploaded_Notes/')
+        destination = "/".join([target,fname])
+        return send_file(destination, as_attachment=True)
+    flash("Log in to view this page")
+    return redirect('/')
 
-@app.route('/downloadoptions')
+#------------------------------------------------------------------------------#
+
+#uploadoptions(Logged in)
+#------------------------------------------------------------------------------#
+
+@app.route('/uploadoptions')
 def downloadoptions():
-    return render_template('downloadoptions.html')
+    if 'user' in session:
+        return render_template('downloadoptions.html')
+    flash("Log in to view this page")
+    return redirect('/')
+
+#------------------------------------------------------------------------------#
+
+#------------------------------------------------------------------------------#
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, session
 import urllib.request
 from flask import send_file
 import sqlite3
@@ -10,6 +10,7 @@ salt = "TwinFuries"
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+app.secret_key = os.urandom(24)
 
 DATABASE = os.path.join(APP_ROOT,'Database/database.db')
 
@@ -67,15 +68,20 @@ def index():
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
+    failed = ""
     if request.method == 'POST':
         username = request.form['username']
         college = request.form['college']
         email = request.form['email']
         passwordun = request.form['pwd1']+salt
         password = hashlib.md5(passwordun.encode())
-        execute_db('insert into Details values("'+username+'","'+email+'","'+college+'","'+password.hexdigest()+'")')
-        return redirect('/home')
-    return render_template('register.html')
+        chkmail = query_db('select Username from Details where Email="'+email+'"')
+        if chkmail:
+            failed = "Email already registered"
+        else:
+            execute_db('insert into Details values("'+username+'","'+email+'","'+college+'","'+password.hexdigest()+'")')
+            return redirect('/home')
+    return render_template('register.html', message = failed)
 
 @app.route('/db_add')
 def adddata():

@@ -78,7 +78,7 @@ pyscrypt==1.6.2
 python-dateutil==2.7.5
 PyTweening==1.0.3
 pytz==2019.1
-PyYAML==5.1.2
+PyYAML==5.4
 razorpay==1.2.0
 regex==2019.8.19
 requests==2.18.4

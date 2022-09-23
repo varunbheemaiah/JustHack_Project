@@ -60,7 +60,7 @@ pandas==0.25.1
 Pillow==5.4.1
 pizzapi==0.0.4
 pizzapy==0.0.0
-protobuf==3.8.0
+protobuf==3.18.3
 pyasn1==0.4.5
 pyasn1-modules==0.2.4
 PyAutoGUI==0.9.41
